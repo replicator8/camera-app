@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Media Content</string>
+    <string name="photo">Фото</string>
+    <string name="video">Видео</string>
+    <string name="gallery">Галерея</string>
+</resources>

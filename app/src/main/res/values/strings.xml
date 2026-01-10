@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Media Content</string>
+    <string name="photo">Photo</string>
+    <string name="video">Video</string>
+    <string name="gallery">Gallary</string>
+    <string name="take_photo">Снять фото</string>
+    <string name="switch_camera">Сменить камеру</string>
+</resources>

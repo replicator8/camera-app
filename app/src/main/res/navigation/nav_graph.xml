@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/photoFragment">
+
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="com.example.mediacontent.PhotoFragment"
+        android:label="Фото" />
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.example.mediacontent.VideoFragment"
+        android:label="Видео" />
+
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.mediacontent.GalleryFragment"
+        android:label="Галерея" />
+
+</navigation>
