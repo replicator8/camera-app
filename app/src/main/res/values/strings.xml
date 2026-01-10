@@ -2,7 +2,7 @@
     <string name="app_name">Media Content</string>
     <string name="photo">Photo</string>
     <string name="video">Video</string>
-    <string name="gallery">Gallary</string>
-    <string name="take_photo">Снять фото</string>
-    <string name="switch_camera">Сменить камеру</string>
+    <string name="gallery">Gallery</string>
+    <string name="take_photo">Take a photo</string>
+    <string name="switch_camera">Change camera</string>
 </resources>

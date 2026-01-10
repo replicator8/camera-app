@@ -4,4 +4,6 @@
     <string name="photo">Фото</string>
     <string name="video">Видео</string>
     <string name="gallery">Галерея</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="switch_camera">Сменить камеру</string>
 </resources>
