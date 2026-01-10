@@ -9,19 +9,23 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Surface
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ZoomState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.google.common.util.concurrent.ListenableFuture
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -36,6 +40,11 @@ class PhotoFragment : Fragment() {
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var imageCapture: ImageCapture? = null
     private lateinit var imageCaptureExecutor: ExecutorService
+
+    private var zoomRatio = 1f
+    private lateinit var zoomStateObserver: Observer<ZoomState>
+
+    private lateinit var scaleGestureDetector: ScaleGestureDetector
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,7 +121,32 @@ class PhotoFragment : Fragment() {
                     imageCapture
                 )
 
-                setupTapToFocus(camera.cameraControl)
+                scaleGestureDetector = ScaleGestureDetector(requireContext(), object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    override fun onScale(detector: ScaleGestureDetector): Boolean {
+                        val delta = zoomRatio * detector.scaleFactor
+                        val newZoom = minOf(maxOf(delta, 1f), camera.cameraInfo.zoomState.value?.maxZoomRatio ?: 1f)
+                        camera.cameraControl.setZoomRatio(newZoom)
+                        zoomRatio = newZoom
+                        return true
+                    }
+                })
+
+                zoomStateObserver = Observer<ZoomState> { zoomState ->
+                    zoomRatio = zoomState.zoomRatio
+                }
+                camera.cameraInfo.zoomState.observe(viewLifecycleOwner, zoomStateObserver)
+
+                binding.preview.setOnTouchListener { _, event ->
+                    scaleGestureDetector.onTouchEvent(event)
+
+                    if (event.action == MotionEvent.ACTION_UP && !scaleGestureDetector.isInProgress) {
+                        val point = binding.preview.meteringPointFactory.createPoint(event.x, event.y)
+                        val action = FocusMeteringAction.Builder(point).build()
+                        camera.cameraControl.startFocusAndMetering(action)
+                    }
+
+                    true
+                }
 
             } catch (e: Exception) {
                 Log.e("PhotoFragment", "Use case binding failed", e)
@@ -124,7 +158,7 @@ class PhotoFragment : Fragment() {
         binding.preview.setOnTouchListener { _, event ->
             val meteringPoint = binding.preview.meteringPointFactory
                 .createPoint(event.x, event.y)
-            val action = androidx.camera.core.FocusMeteringAction.Builder(meteringPoint).build()
+            val action = FocusMeteringAction.Builder(meteringPoint).build()
             cameraControl.startFocusAndMetering(action)
             true
         }
