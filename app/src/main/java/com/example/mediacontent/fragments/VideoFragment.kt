@@ -251,10 +251,10 @@ class VideoFragment : Fragment() {
 
     private fun updateUiForRecording(isRecording: Boolean) {
         if (isRecording) {
-            binding.recordBtn.setBackgroundResource(R.drawable.circle_gray_background)
+            binding.recordBtn.setBackgroundResource(R.drawable.stop_record)
             binding.timeIndicator.visibility = View.VISIBLE
         } else {
-            binding.recordBtn.setBackgroundResource(R.drawable.circle_red_background)
+            binding.recordBtn.setBackgroundResource(R.drawable.start_record)
             binding.timeIndicator.visibility = View.GONE
             binding.timeIndicator.text = "00:00"
         }

@@ -55,6 +55,6 @@ class FullScreenMediaActivity : AppCompatActivity() {
             }
         }
 
-        binding.root.setOnClickListener { finish() }
+//        binding.root.setOnClickListener { finish() }
     }
 }

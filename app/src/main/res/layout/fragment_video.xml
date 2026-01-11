@@ -45,7 +45,8 @@
         android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="@id/recordBtn"
+        app:layout_constraintBottom_toBottomOf="@id/recordBtn"
         app:layout_constraintStart_toEndOf="@id/recordBtn"
-        android:layout_marginStart="16dp" />
+        android:layout_marginStart="26dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
