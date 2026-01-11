@@ -6,4 +6,5 @@
     <color name="backGray2">#ADBACC</color>
     <color name="mainBack">#151515</color>
     <color name="second">#222222</color>
+    <color name="transparent">#222222</color>
 </resources>

@@ -57,6 +57,7 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.4.0")
     implementation("androidx.camera:camera-lifecycle:1.4.0")
     implementation("androidx.camera:camera-view:1.4.0")
+    implementation("androidx.camera:camera-video:1.4.0")
 
     // nav graph
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
@@ -64,4 +65,8 @@ dependencies {
 
     // material
     implementation("com.google.android.material:material:1.12.0")
+
+    implementation("androidx.exifinterface:exifinterface:1.3.6")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

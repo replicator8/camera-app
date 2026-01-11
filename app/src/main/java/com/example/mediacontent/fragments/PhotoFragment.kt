@@ -1,12 +1,14 @@
-package com.example.mediacontent
+package com.example.mediacontent.fragments
 
 import androidx.camera.core.Preview
 import com.example.mediacontent.databinding.FragmentPhotoBinding
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -45,6 +47,7 @@ class PhotoFragment : Fragment() {
     private lateinit var zoomStateObserver: Observer<ZoomState>
 
     private lateinit var scaleGestureDetector: ScaleGestureDetector
+    private var lastImageCapture: ImageCapture? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,6 +111,7 @@ class PhotoFragment : Fragment() {
         }
 
         imageCapture = ImageCapture.Builder().build()
+        lastImageCapture = imageCapture
 
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
@@ -153,17 +157,6 @@ class PhotoFragment : Fragment() {
             }
         }, ContextCompat.getMainExecutor(requireContext()))
     }
-
-    private fun setupTapToFocus(cameraControl: androidx.camera.core.CameraControl) {
-        binding.preview.setOnTouchListener { _, event ->
-            val meteringPoint = binding.preview.meteringPointFactory
-                .createPoint(event.x, event.y)
-            val action = FocusMeteringAction.Builder(meteringPoint).build()
-            cameraControl.startFocusAndMetering(action)
-            true
-        }
-    }
-
     private fun setupClickListeners() {
         binding.captureBtn.setOnClickListener {
             takePhoto()
@@ -185,7 +178,9 @@ class PhotoFragment : Fragment() {
     private fun takePhoto() {
         imageCapture?.let { imageCapture ->
             val name = "JPEG_${System.currentTimeMillis()}.jpg"
-            val file = File(requireContext().externalMediaDirs[0], name)
+            val photoDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                ?: requireContext().filesDir
+            val file = File(photoDir, name)
             val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
 
             imageCapture.takePicture(
@@ -198,7 +193,9 @@ class PhotoFragment : Fragment() {
 
                     override fun onError(exception: ImageCaptureException) {
                         Log.e("PhotoFragment", "Error taking photo", exception)
-                        Toast.makeText(context, "Error taking photo", Toast.LENGTH_LONG).show()
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(context, "Ошибка съёмки", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             )
@@ -208,11 +205,21 @@ class PhotoFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun animateFlash() {
         binding.root.postDelayed({
-            binding.root.foreground = android.graphics.drawable.ColorDrawable(Color.WHITE)
+            binding.root.foreground = ColorDrawable(Color.WHITE)
             binding.root.postDelayed({
                 binding.root.foreground = null
             }, 50)
         }, 100)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        lastImageCapture?.let { imageCapture ->
+            try {
+            } catch (e: Exception) {
+                Log.w("PhotoFragment", "Failed to abort capture", e)
+            }
+        }
     }
 
     override fun onDestroyView() {

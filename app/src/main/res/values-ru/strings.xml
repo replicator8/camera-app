@@ -6,4 +6,5 @@
     <string name="gallery">Галерея</string>
     <string name="take_photo">Сделать фото</string>
     <string name="switch_camera">Сменить камеру</string>
+    <string name="gallery_title">Галерея</string>
 </resources>
