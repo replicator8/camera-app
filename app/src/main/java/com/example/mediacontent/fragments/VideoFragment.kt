@@ -3,14 +3,11 @@ package com.example.mediacontent.fragments
 import android.Manifest
 import android.annotation.SuppressLint
 import com.example.mediacontent.R
-import android.content.ContentValues
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -24,7 +21,6 @@ import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ZoomState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FileOutputOptions
-import androidx.camera.video.MediaStoreOutputOptions
 import androidx.camera.video.Recorder
 import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
@@ -98,8 +94,7 @@ class VideoFragment : Fragment() {
     }
 
     private fun hasCameraAndMicPermissions(): Boolean {
-        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestCameraAndMicPermissions() {
@@ -119,7 +114,7 @@ class VideoFragment : Fragment() {
             if (hasCameraAndMicPermissions()) {
                 startCamera()
             } else {
-                Toast.makeText(context, "Требуются разрешения на камеру и микрофон", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Нужны разрешения на камеру и микрофон!", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -148,8 +143,7 @@ class VideoFragment : Fragment() {
 
                 scaleGestureDetector = ScaleGestureDetector(requireContext(), object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
                     override fun onScale(detector: ScaleGestureDetector): Boolean {
-                        val newZoom = (zoomRatio * detector.scaleFactor)
-                            .coerceIn(1f, camera.cameraInfo.zoomState.value?.maxZoomRatio ?: 1f)
+                        val newZoom = (zoomRatio * detector.scaleFactor).coerceIn(1f, camera.cameraInfo.zoomState.value?.maxZoomRatio ?: 1f)
                         camera.cameraControl.setZoomRatio(newZoom)
                         zoomRatio = newZoom
                         return true

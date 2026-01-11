@@ -8,4 +8,5 @@
     <string name="gallery_title">Gallery</string>
     <string name="delete">Delete</string>
     <string name="record_video">Record Video</string>
+    <string name="no_photo_placeholder">Медиафайлов нет! Сделайте фото или видео )</string>
 </resources>

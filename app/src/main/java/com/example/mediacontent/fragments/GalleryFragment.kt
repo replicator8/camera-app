@@ -82,6 +82,14 @@ class GalleryFragment : Fragment() {
                 mediaList.clear()
                 mediaList.addAll(newMediaList)
                 adapter.notifyDataSetChanged()
+
+                if (newMediaList.isEmpty()) {
+                    binding.tvEmpty.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.GONE
+                } else {
+                    binding.tvEmpty.visibility = View.GONE
+                    binding.recyclerView.visibility = View.VISIBLE
+                }
             }
         }
     }
